@@ -2,6 +2,27 @@ from getpass import getpass
 import string
 import math
 
+
+def load_common_passwords(filepath="data\common-passwords.txt"):
+    common_passwords = set()
+
+    try:
+        with open(filepath, "r", encoding="utf-8", errors="ignore") as file:
+            for line in file:
+                password = line.strip().lower()
+
+                if password:
+                    common_passwords.add(password)
+
+    except FileNotFoundError:
+        print("Warning: common password file not found.")
+        print("Common-password check will be skipped.\n")
+
+    return common_passwords
+
+
+common_passwords = load_common_passwords()
+
 password = getpass("Enter Password: ")
 
 has_number = any(char in string.digits for char in password)
@@ -9,6 +30,8 @@ has_symbol = any(char in string.punctuation for char in password)
 has_uppercase = any(char in string.ascii_uppercase for char in password)
 has_lowercase = any(char in string.ascii_lowercase for char in password)
 has_good_length = len(password) >= 8
+
+is_common = password.lower() in common_passwords
 
 score = 0
 
@@ -46,12 +69,9 @@ if pool_size > 0:
 else:
     entropy = 0
 
-print(f"\nPassword length: {len(password)}")
-print(f"Score: {score}/5")
-print(f"Pool size: {pool_size}")
-print(f"Entropy: {entropy:.2f} bits")
-
-if entropy < 28:
+if is_common:
+    strength = "Very Weak"
+elif entropy < 28:
     strength = "Very Weak"
 elif entropy < 36:
     strength = "Weak"
@@ -62,6 +82,10 @@ elif entropy < 80:
 else:
     strength = "Very Strong"
 
+print(f"\nPassword length: {len(password)}")
+print(f"Score: {score}/5")
+print(f"Pool size: {pool_size}")
+print(f"Entropy: {entropy:.2f} bits")
 print(f"Strength: {strength}")
 
 print("\nChecks:")
@@ -90,3 +114,8 @@ if has_lowercase:
     print("- Contains lowercase letters")
 else:
     print("- Add lowercase letters")
+
+if is_common:
+    print("- Found in common-passwords list")
+else:
+    print("- Not found in common-passwords list")
