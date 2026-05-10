@@ -15,8 +15,7 @@ Progress:
 - [x] Detect symbols
 - [x] Add a basic scoring system
 - [x] Calculate estimated password entropy
-- [ ] Add repeated-pattern detection
-- [ ] Add wordlist checking
+- [x] Add common password detection
 - [ ] Tests
 - [ ] Improve final strength rating system
 
@@ -39,9 +38,43 @@ entropy = password length × log2(pool size)
 
 This gives an estimate of how difficult the password may be to brute-force, assuming the password was randomly created.
 
-## How to Run
+The checker can also compare the entered password against a common-password wordlist. This helps catch passwords that may look strong mathematically but are already known from leaked or commonly used password lists.
+
+To enable this feature, download the SecLists `10-million-password-list-top-10000.txt` file, rename it to `common-passwords.txt`, and place it inside a `data/` folder.
+
+## Setup
+
+This project uses a common-password wordlist from SecLists.
+
+To enable the common-password check:
+
+1. Download `10-million-password-list-top-10000.txt` from the SecLists repository.
+2. Create a folder called `data`.
+3. Rename the downloaded file to:
+
+```text
+common_passwords.txt
+```
+
+4. Place it inside the `data` folder.
+
+Your project should look like this:
+
+```text
+password-strength-checker/
+├── main.py
+├── README.md
+├── .gitignore
+└── data/
+    └── common_passwords.txt
+```
+
+The wordlist is ignored by Git using `.gitignore`, so it will not be uploaded to GitHub.
 
 Make sure Python is installed, then run:
+
+## How to Run
+
 
 ```bash
 python main.py
@@ -60,7 +93,6 @@ The password input is hidden while typing because the project uses Python's `get
 ```text
 Password length: 12
 Score: 5/5
-Pool size: 94
 Entropy: 78.65 bits
 Strength: Strong
 
@@ -70,6 +102,7 @@ Checks:
 - Contains a symbol
 - Contains uppercase letters
 - Contains lowercase letters
+- Not found in common-passwords list
 ```
 
 ## What I Have Learned So Far
@@ -82,12 +115,14 @@ So far, this project has helped me understand:
 - What password entropy means
 - Why entropy is measured in bits
 - Why a password can look strong mathematically but still be weak in real life
+- How to read external files in Python using `with open(...)`
+- Why sets are faster than lists for checking if a password exists in a wordlist
+- How to handle missing files without crashing the program
+- Why data files should usually be excluded from GitHub using `.gitignore`
 
 ## Current Limitations
 
-This checker is still basic.
-
-Right now, it mostly judges passwords based on length, character variety, and estimated entropy. This means some bad passwords may still appear stronger than they really are.
+Right now, it mainly judges passwords using length, character variety, entropy, and common-password detection. This means some weak passwords may still appear stronger than they really are.
 
 For example:
 
@@ -95,7 +130,7 @@ For example:
 aaaaaaaaaaaa
 ```
 
-This password is long, but it is obviously weak because it is just the same character repeated.
+This password is long, but it is weak because it is just the same character repeated.
 
 Another example:
 
@@ -103,15 +138,15 @@ Another example:
 Password123!
 ```
 
-This contains uppercase, lowercase, numbers, and symbols, but it is still predictable because it follows a very common pattern.
+This contains uppercase letters, lowercase letters, numbers, and symbols, but it is still predictable because it follows a common human pattern.
 
 I plan to improve this by adding checks for:
 
-- Common passwords
 - Repeated characters
 - Keyboard patterns
 - Dictionary words
-- Breached password lists
+- More common password mutations
+- Better strength rating logic
 
 ## Planned Improvements
 
