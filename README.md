@@ -63,10 +63,13 @@ Your project should look like this:
 ```text
 password-strength-checker/
 ├── main.py
+├── analysis.py
+├── verdict.py
+├── wordlist.py
 ├── README.md
 ├── .gitignore
 └── data/
-    └── common_passwords.txt
+    └── common-passwords.txt
 ```
 
 The wordlist is ignored by Git using `.gitignore`, so it will not be uploaded to GitHub.
@@ -152,12 +155,10 @@ I plan to improve this by adding checks for:
 
 Next steps for this project:
 
-- Add a common password wordlist
 - Detect repeated characters like `aaaaaa`
 - Detect simple patterns like `123456` or `qwerty`
 - Improve the strength rating system
 - Add tests
-- Refactor the code into functions
 - Add clearer user feedback
 
 ## Project Goal
