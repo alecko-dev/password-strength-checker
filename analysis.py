@@ -1,5 +1,6 @@
 import string
 import math
+from breach_check import check_breach_count
 
 
 def analyse_character_classes(password):
@@ -41,6 +42,7 @@ def analyse_password(password, common_passwords):
 
     has_good_length = len(password) >= 8
     is_common = password.lower() in common_passwords
+    breach_count = check_breach_count(password)
 
     score = sum([
         has_good_length,
@@ -64,4 +66,5 @@ def analyse_password(password, common_passwords):
         "pool_size": pool_size,
         "entropy": entropy,
         "is_common": is_common,
+        "breach_count": breach_count,
     }
