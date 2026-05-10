@@ -1,4 +1,4 @@
-def load_common_passwords(filepath="data\common-passwords.txt"):
+def load_common_passwords(filepath="data/common-passwords.txt"):
     common_passwords = set()
 
     try:
