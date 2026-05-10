@@ -1,4 +1,7 @@
 def determine_strength(results):
+    if results["breach_count"] is not None and results["breach_count"] > 0:
+        return "Compromised"
+
     if results["is_common"]:
         return "Very Weak"
 
@@ -19,10 +22,17 @@ def determine_strength(results):
 def print_report(results):
     strength = determine_strength(results)
 
-    print(f"\nPassword length: {results['password_length']} characters")
+    print(f"\nPassword length: {results['password_length']}")
     print(f"Score: {results['score']}/5")
     print(f"Entropy: {results['entropy']:.2f} bits")
     print(f"Strength: {strength}")
+
+    if results["breach_count"] is None:
+        print("Breach check: skipped or failed")
+    elif results["breach_count"] > 0:
+        print(f"Breach check: found {results['breach_count']:,} times in known breaches")
+    else:
+        print("Breach check: not found in known breaches")
 
     print("\nChecks:")
 
